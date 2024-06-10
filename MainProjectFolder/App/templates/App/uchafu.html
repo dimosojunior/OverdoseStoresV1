@@ -1,0 +1,46 @@
+i'm using django frame work and here i want to implement the following;
+
+below are my models;
+class ProductsStores(models.Model):
+    
+    Unit = models.ForeignKey(ProductsUnit, verbose_name="Product Unit",on_delete=models.CASCADE, blank=True,null=True)
+    productCategory = models.ForeignKey(ProductsCategories,verbose_name="Product Category",on_delete=models.CASCADE, blank=True,null=True)
+    Type = models.ForeignKey(PeoplesCategories,verbose_name="Type",on_delete=models.CASCADE, blank=True,null=True)
+    Feature = models.ForeignKey(ProductsFeatures, verbose_name="Feature",on_delete=models.CASCADE, blank=True,null=True)
+    
+    product_name = models.CharField(verbose_name="Product Name", max_length=100,blank=False,null=False)
+    product_second_name = models.CharField(default="",verbose_name="Product Second Name", max_length=100,blank=True,null=True)
+
+
+    price = models.CharField(max_length=20,blank=True,null=True)
+    #ProductUnit = models.CharField(verbose_name="Product Unit", max_length=100,blank=True,null=True)
+    ProductQuantity = models.IntegerField(verbose_name="Product Quantity",blank=True,null=True)
+    InitialProductQuantity = models.IntegerField(verbose_name="Initial Product Quantity",blank=True,null=True)
+    ProductImage = models.ImageField(verbose_name="Product Image", upload_to='media/ProductsInventoryImages/',blank=True,null=True)
+    Created = models.DateTimeField(auto_now_add=True)
+    Updated = models.DateTimeField(auto_now=True)
+
+    
+    
+    class Meta:
+        verbose_name_plural = "Stores"
+        
+    
+    def __str__(self):
+        return f" {self.product_name} {self.product_second_name} "
+
+
+@receiver(pre_save, sender=ProductsStores)
+def Products__initial_quantity(sender, **kwargs):
+    Initial_qty = kwargs['instance']
+    Initial_qty.InitialProductQuantity = Initial_qty.ProductQuantity
+    # total_cart_items = CartItems.objects.filter(user = cart_items.user )
+    # cart = Cart.objects.get(id = cart_items.cart.id)
+    # cart.total_price = cart_items.price
+    # cart.save()
+
+So now the problem is, i need to implement the following;
+when admin add new item to this model, i want to allow user to enter only the value of ProductQuantity but when admin enter the value of ProductQuantity, the value of InitialProductQuantity must be equal to the entered value of ProductQuantity automatically when admin submit data.
+but until here everything is working fine but now the problem is , when admin next time modifies the value of ProductQuantity also the value of InitialProductQuantity changes, i don't want that, 
+the thing i need is, after successfully the value of InitialProductQuantity assigned equal to the value of ProductQuantity, and next time admin changes the value of ProductQuantity the value of InitialProductQuantity should not change,it must remain the same as before.
+so pass through my codes and help me to implement that issue;
